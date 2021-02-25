@@ -8,8 +8,8 @@ import
   } from '@ant-design/icons';
   import { Typography } from 'antd';
 import './App.css';
-import Home from './Pages/Home';
 import SignIn from './Pages/SignIn';
+import History from './Pages/History';
 import { RolePayloadCacheService } from './Services/RolePayloadCacheService';
 import RolesService from './Services/RolesService';
 import CheckoutRecord from './Pages/CheckoutRecord';
@@ -49,10 +49,11 @@ function App(props:any) {
               </Link>
             </Menu.Item>
             <Menu.Item key="/SignIn" hidden={logined}><Link to='/SignIn'><LoginOutlined />Sign In</Link></Menu.Item>
-            <Menu.Item key ="/SignOut" hidden={!logined} onClick={OnSignoutAsync} ><LogoutOutlined />Sign out</Menu.Item>
+            
             <Menu.Item key="/CheckoutRecord"><Link to='/CheckoutRecord'><SendOutlined />Checkout</Link></Menu.Item>
             <Menu.Item key="/CheckinRecord"><Link to='/CheckinRecord'><SendOutlined rotate={180}/>Checkin</Link></Menu.Item>
             <Menu.Item key="/History"><Link to="/History"><HistoryOutlined />History</Link></Menu.Item>
+            <Menu.Item key ="/SignOut" hidden={!logined} onClick={OnSignoutAsync} ><LogoutOutlined />Sign out</Menu.Item>
           </Menu>
           <Title level={3}
             style={{color:"white",textAlign:"center",margin:"0.5rem auto",
@@ -62,7 +63,6 @@ function App(props:any) {
         <Content>
           <div className="site-layout-content">
             <Switch>
-              
               <Route exact path='/CheckoutRecord'>
                 <CheckoutRecord />
               </Route>
@@ -77,6 +77,9 @@ function App(props:any) {
               </Route>
               <Route exact path="/Todo">
                 <Todo />
+              </Route>
+              <Route exact path="/History">
+                <History />
               </Route>
               <Route path='/'>
                 <SignIn OnSignIn={OnSignIn}/>
@@ -94,7 +97,7 @@ function App(props:any) {
   {
     window.alert("Sign in successfully, back to Home page now!");
     setLogined(true);
-    history.push('/Todo');
+    history.push('/History');
   }
 
   async function OnSignoutAsync()

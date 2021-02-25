@@ -18,7 +18,7 @@ export default function Todo()
             </div>
             <Tabs defaultActiveKey="1" style={{padding:'1rem 2rem'}}
                 type="card">
-                <TabPane key="1" tab="History">
+                <TabPane key="1" tab="Todo">
                     <Tabs defaultActiveKey="1-1" type="card">
                         <TabPane key="1-1" tab="Checout">
                             <CheckoutRecordTodo />
@@ -27,17 +27,7 @@ export default function Todo()
                             <CheckinRecordTodo />
                         </TabPane>
                     </Tabs>
-                </TabPane>
-                <TabPane key="2" tab="Todo">
-                    <Tabs defaultActiveKey="2-1" type="card">
-                        <TabPane key="2-1" tab="Checkout">
-                            <CheckoutRecordTodo />
-                        </TabPane>
-                        <TabPane key="2-2" tab="Checkin">
-                            <CheckinRecordTodo />
-                        </TabPane>
-                    </Tabs>
-                </TabPane>
+                </TabPane>  
             </Tabs>
         </Fragment>
     )

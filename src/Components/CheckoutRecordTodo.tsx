@@ -3,7 +3,6 @@ import { Table, Button } from 'antd';
 import CheckoutRecordPayload from '../Models/CheckoutRecordPayload';
 const { Column } = Table;
 
-
 export default function CheckoutRecordTodo() {
     const [checkoutRecords, setCheckoutRecords] = useState<CheckoutRecordPayload[]>([]);
     return (

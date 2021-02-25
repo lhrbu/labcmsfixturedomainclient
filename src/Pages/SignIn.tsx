@@ -24,7 +24,7 @@ const SignIn: React.FC<{ OnSignIn?: () => void }> = ({ OnSignIn }) => {
     const history = useHistory();
     useEffect(()=>{
         if(_rolePayloadCacheService.Get()){
-            history.push("/Todo");
+            history.push("/History");
         }
     },[])
 

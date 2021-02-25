@@ -3,6 +3,7 @@ import moment from 'moment';
 export class RolePayloadCacheService
 {
     private readonly _expiredSeconds:number;
+    private readonly _userId:string | null = null;
     
     public constructor(expiredDayns:number = 7) {
         this._expiredSeconds = expiredDayns*24*60*60;
@@ -25,4 +26,6 @@ export class RolePayloadCacheService
             return window.localStorage.getItem("RolePayload");
         }else{return null;}
     }
+
+    public get UserId(){return this._userId;}
 }
