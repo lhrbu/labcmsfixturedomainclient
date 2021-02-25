@@ -9,7 +9,7 @@ const { Column } = Table;
 const _timeStampStringConverter = new TimeStampStringConverter();
 const _checkoutRecordsWebAPI = new CheckoutRecordsWebAPI();
 
-export default function CheckoutRecordHistory()
+export default function CheckoutApplyHistory()
 {
     const [loading,setLoading]=useState<boolean>(true);
     const [checkoutRecords,setCheckoutRecords]= useState<CheckoutRecord[]>([]);
@@ -18,7 +18,8 @@ export default function CheckoutRecordHistory()
     return (
         <Table dataSource={checkoutRecords}
             bordered size="small" loading={loading}
-            rowKey="Id">
+            rowKey="Id"
+            onHeaderRow={()=>({style:{textAlign: 'center'}})}>
             <Column title="Id" dataIndex="Id"/>
             <Column title="Applicant" dataIndex="ApplicantUserId"/>
             <Column title="Fixture No" dataIndex="FixtureNo"/>
@@ -30,7 +31,7 @@ export default function CheckoutRecordHistory()
                 render={value=>_timeStampStringConverter.FromUnixTimeSeconds(value as number)}/>
             <Column title="Test Room Approver" dataIndex="TestRoomApproverUserId"/>
             <Column title="Fixture Room Approver" dataIndex="FixtureRoomApproverUserId"/>
-            <Column title="Checkout Status" dataIndex="CheckoutStatus"/>
+            <Column title="Checkout Status" dataIndex="Status"/>
         </Table>
     );
 

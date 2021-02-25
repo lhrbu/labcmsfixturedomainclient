@@ -1,12 +1,15 @@
 import moment from 'moment';
 
-export class RolePayloadCacheService
+export default class RolePayloadCacheService
 {
     private readonly _expiredSeconds:number;
-    private readonly _userId:string | null = null;
     
     public constructor(expiredDayns:number = 7) {
         this._expiredSeconds = expiredDayns*24*60*60;
+    }
+    public SetUserId(userId:string)
+    {
+        window.localStorage.setItem("UserId",userId);
     }
     public Set(rolePayload:string)
     {
@@ -27,5 +30,7 @@ export class RolePayloadCacheService
         }else{return null;}
     }
 
-    public get UserId(){return this._userId;}
+    public get UserId(){
+        return window.localStorage.getItem("UserId");
+    }
 }

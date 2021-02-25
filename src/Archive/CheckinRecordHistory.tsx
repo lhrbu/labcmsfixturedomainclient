@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Select, Breadcrumb,Table } from 'antd';
-import CheckinRecord from '../Models/CheckinRecord';
+import CheckinRecord from './CheckinRecord';
 import TimeStampStringConverter from '../Services/TimeStampStringConverter';
 import CheckinRecordsWebAPI from '../WebAPIs/CheckinRecordsWebAPI';
 

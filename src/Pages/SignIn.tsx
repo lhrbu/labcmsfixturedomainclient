@@ -5,7 +5,7 @@ import md5 from 'md5';
 import cookie from 'react-cookies'
 import RolesService from '../Services/RolesService';
 import './SignIn.css';
-import { RolePayloadCacheService } from '../Services/RolePayloadCacheService';
+import RolePayloadCacheService from '../Services/RolePayloadCacheService';
 import { Redirect, useHistory } from 'react-router-dom';
 const layout = {
     labelCol: { span: 8 },
@@ -86,6 +86,7 @@ const SignIn: React.FC<{ OnSignIn?: () => void }> = ({ OnSignIn }) => {
                 const rolePayloadCookie = cookie.load("RolePayload");
                 _rolePayloadCacheService.Set(rolePayloadCookie);
             }
+            _rolePayloadCacheService.SetUserId(values.UserId)
             OnSignIn?.();
         } catch (err) {
             window.alert(err);

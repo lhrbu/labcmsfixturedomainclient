@@ -1,14 +1,15 @@
 import axios from 'axios';
-import CheckinRecord from '../Models/CheckinRecord';
-import { RolePayloadCacheService } from '../Services/RolePayloadCacheService';
+import CheckinRecord from '../Archive/CheckinRecord';
 
-const _rolePayloadCacheService = new RolePayloadCacheService();
 export default class CheckinRecordsWebAPI
 {
-    private readonly _url='/api/CheckinRecord';
+    private readonly _url='/api/CheckinRecords';
     public async GetCheckinRecordsHistory()
     {
-        const userId = _rolePayloadCacheService.UserId;
-        return (await axios.get(`${this._url}/${userId}`,{params:{date:new Date()}})).data as CheckinRecord[];
+        return (await axios.get(this._url,{params:{date:new Date()}})).data as CheckinRecord[];
+    }
+    public async GetCheckinRecordsTodo()
+    {
+        return (await axios.get(`${this._url}/Todo`,{params:{date:new Date()}})).data as CheckinRecord[];
     }
 }

@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { Table, Button } from 'antd';
-import CheckinRecordPayload from '../Models/CheckinRecordPayload';
+import CheckinRecordPayload from './CheckinRecordPayload';
 const { Column } = Table;
 
 

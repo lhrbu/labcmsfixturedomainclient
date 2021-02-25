@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { RolePayloadCacheService } from './RolePayloadCacheService';
+import RolePayloadCacheService from './RolePayloadCacheService';
 
 
 export default class RolesService

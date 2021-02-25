@@ -9,5 +9,5 @@ export default class CheckoutRecord
     public PlanndReturnDate:number = 0;
     public TestRoomApproverUserId:string | null = null;
     public FixtureRoomApproverUserId:string | null = null;
-    public CheckoutStatus:string | null = null;
+    public Status:number = 0;
 }

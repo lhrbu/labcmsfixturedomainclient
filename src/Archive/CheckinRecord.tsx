@@ -3,7 +3,7 @@ import { Form, Input, Button, Select, Breadcrumb } from 'antd';
 import './HeaderBar.css';
 import Fixture from '../Models/Fixture';
 import FixturesWebAPI from '../WebAPIs/FixturesWebAPI';
-import { RolePayloadCacheService } from '../Services/RolePayloadCacheService';
+import RolePayloadCacheService from '../Services/RolePayloadCacheService';
 import { useHistory } from 'react-router-dom';
 
 const { Option } = Select;

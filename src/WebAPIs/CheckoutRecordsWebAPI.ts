@@ -1,14 +1,34 @@
 import axios from 'axios';
 import CheckoutRecord from '../Models/CheckoutRecord';
-import { RolePayloadCacheService } from '../Services/RolePayloadCacheService';
+import CheckoutRecordPayload from '../Models/CheckoutRecordPayload';
 
-const _rolePayloadCacheService = new RolePayloadCacheService();
 export default class CheckoutRecordsWebAPI
 {
-    private readonly _url='/api/CheckoutRecord';
+    public constructor(){
+        axios.defaults.withCredentials=true;
+    }
+    private readonly _url='/api/CheckoutRecords';
     public async GetCheckoutRecordsHistory()
     {
-        const userId = _rolePayloadCacheService.UserId;
-        return (await axios.get(`${this._url}/${userId}`,{params:{date:new Date()}})).data as CheckoutRecord[];
+        return (await axios.get(this._url,{params:{date:new Date()}})).data as CheckoutRecord[];
+    }
+
+    public async GetCheckoutRecordsTestRoomApproverTodo()
+    {
+        return (await axios.get(`${this._url}/TestRoomApproverTodo`,{params:{date:new Date()}})).data as CheckoutRecord[];
+    }
+    public async GetCheckoutRecordsTestRoomApproverTodoCount()
+    {
+        return (await axios.get(`${this._url}/TestRoomApproverTodoCount`,{params:{date:new Date()}})).data as number;
+    }
+
+    public async InitAsync(checkoutRecordPayload:CheckoutRecordPayload)
+    {
+        await axios.post(`${this._url}/Init`,checkoutRecordPayload,{params:{date:new Date()}});
+    }
+
+    public async TestRoomApproveAsync(checkoutRecordId:number)
+    {
+        await axios.post(`${this._url}/TestRoomApprove/${checkoutRecordId}`,{params:{date:new Date()}});
     }
 }

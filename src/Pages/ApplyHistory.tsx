@@ -1,13 +1,10 @@
 import React, { Fragment, useState } from 'react';
 import { Breadcrumb, Tabs } from 'antd';
-import CheckoutRecordTodo from '../Components/CheckoutRecordTodo';
-import CheckinRecordTodo from '../Components/CheckinRecordTodo';
-import CheckoutRecord from './CheckoutRecord';
-import CheckoutRecordHistory from '../Components/CheckoutRecordHistory';
+import CheckoutApplyHistory from '../Components/CheckoutApplyHistory';
 const { TabPane } = Tabs;
 
 
-export default function History()
+export default function ApplyHistory()
 {
     return (
     <Fragment>
@@ -20,10 +17,7 @@ export default function History()
         <Tabs defaultActiveKey="1" style={{ padding: '1rem 2rem' }}
             type="card">
             <TabPane key="1" tab="Checkout">
-                <CheckoutRecordHistory />
-            </TabPane>
-            <TabPane key="2" tab="Checkin">
-                <CheckoutRecordHistory />
+                <CheckoutApplyHistory />
             </TabPane>
         </Tabs>
     </Fragment>);
