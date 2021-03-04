@@ -7,6 +7,9 @@ const { Column } = Table;
 
 const _timeStampStringConverter = new TimeStampStringConverter();
 const _checkoutRecordsWebAPI = new CheckoutRecordsWebAPI();
+
+
+
 export default function CheckoutTestRoomApproverTodo() {
     const [checkoutRecords, setCheckoutRecords] = useState<CheckoutRecordPayload[]>([]);
     const [loading,setLoading] = useState<boolean>(true);
@@ -53,8 +56,9 @@ export default function CheckoutTestRoomApproverTodo() {
             window.alert(error);
         }
         finally{
+            await FetchCheckoutRecordsTodo();
             setInSubmit(false);
-            window.location.reload();
+            // window.location.reload();
         }
     }
 }
