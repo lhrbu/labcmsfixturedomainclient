@@ -3,7 +3,7 @@ import { Layout, Menu, Avatar, Badge } from 'antd';
 import { Link, Route, Switch, useHistory } from 'react-router-dom';
 import {
   HomeFilled, LogoutOutlined, ProfileFilled, UserOutlined, SendOutlined, HistoryOutlined,
-  LoginOutlined, CodeFilled, SaveFilled, DatabaseFilled, BarChartOutlined
+  LoginOutlined, CodeFilled, SaveFilled, DatabaseFilled, BarChartOutlined,FileSearchOutlined
 } from '@ant-design/icons';
 import './App.css';
 import SignIn from './Pages/SignIn';
@@ -59,7 +59,7 @@ function App(props: any) {
                 </Link>
               </Menu.Item>
               <Menu.Item key="/SignIn" hidden={logined}><Link to='/SignIn'><LoginOutlined />Sign In</Link></Menu.Item>
-
+              <Menu.Item key="/Fixtures.xltm"><a href="/Fixtures.xltm"  target="_blank"><FileSearchOutlined />Query Fixtures</a></Menu.Item>
               <Menu.Item key="/CheckoutRecord"><Link to='/CheckoutRecord'><SendOutlined />Checkout Apply</Link></Menu.Item>
               <Menu.Item key="/History"><Link to="/History"><HistoryOutlined />Apply History</Link></Menu.Item>
               <Menu.Item key="/SignOut" hidden={!logined} onClick={OnSignoutAsync} ><LogoutOutlined />Sign out</Menu.Item>
