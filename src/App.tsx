@@ -1,45 +1,39 @@
-import React, { useEffect, useState } from 'react';
-import { Layout, Menu, Avatar, Badge } from 'antd';
-import { Link, Route, Switch, useHistory } from 'react-router-dom';
+import React,{ useEffect, useState } from 'react';
+import { Layout, Menu, Avatar, Badge,message } from 'antd';
+import { Link, Route, Switch } from 'react-router-dom';
 import {
-  HomeFilled, LogoutOutlined, ProfileFilled, UserOutlined, SendOutlined, HistoryOutlined,
-  LoginOutlined, CodeFilled, SaveFilled, DatabaseFilled, BarChartOutlined,FileSearchOutlined
+  LogoutOutlined, UserOutlined, SendOutlined, HistoryOutlined,
+  LoginOutlined, FileSearchOutlined,HomeFilled
 } from '@ant-design/icons';
 import './App.css';
-import SignIn from './Pages/SignIn';
-import ApplyHistory from './Pages/ApplyHistory';
-import RolePayloadCacheService from './Services/RolePayloadCacheService';
-import RolesService from './Services/RolesService';
+import SignIn from './Components/SignIn';
+import CheckoutApplyHistory from './Pages/CheckoutApplyHistory';
+import LoginedStateCachedService from './Services/LoginedStateCachedService';
+import RolesWebAPI from './WebAPIs/RolesWebAPI';
 import CheckoutApply from './Pages/CheckoutApply';
-import CheckoutTestRoomApproverTodo from './Components/CheckoutTestRoomApproverTodo';
-import Todo from './Pages/Todo';
+import TestFieldResponseTodo from './Pages/TestFieldResponseTodo';
 import CheckoutRecordsWebAPI from './WebAPIs/CheckoutRecordsWebAPI';
+import Logined from './States/Logined'
+import { observer } from "mobx-react-lite";
+import Home from './Pages/Home';
 
 const { Header, Content, Footer } = Layout;
-const _rolePayloadCacheService = new RolePayloadCacheService();
-
-
+const _rolePayloadCacheService = new LoginedStateCachedService();
 const _checkoutRecordsWebAPI = new CheckoutRecordsWebAPI();
+const _rolesWebAPI = new RolesWebAPI();
 
-function App(props: any) {
-  const [logined, setLogined] = useState<boolean>(false);
+let App = observer(()=> {
   const [todoCount,setTodoCount] = useState<number>(0);
-  const history = useHistory();
   useEffect(() => {
-    if (_rolePayloadCacheService.Get()) { 
-      setLogined(true); 
+    if (_rolePayloadCacheService.GetRolePayloadAndSetCookie()) { 
+      Logined.SetLogin(true)
     }
     else {
-      history.push("/SignIn");
+      Logined.SetLogin(false)
     }
   }, []);
 
   useEffect(()=>{
-    // const id = setInterval(()=>{
-    //   _checkoutRecordsWebAPI.GetCheckoutRecordsTestRoomApproverTodoCount()
-    //     .then(count=>setTodoCount(count));
-    // },2400);
-    // return ()=>clearInterval(id);
     _checkoutRecordsWebAPI.GetCheckoutRecordsTestRoomApproverTodoCount()
         .then(count=>setTodoCount(count));
   },[]);
@@ -47,27 +41,25 @@ function App(props: any) {
   return (
     <Layout className="layout">
       <Header>
-        {
-          logined ? (
-            <Menu theme="dark" mode="horizontal" style={{ fontSize: '16px' }}
-              hidden={!logined} >
-              <Menu.Item  key="/Todo">
-                <Link to="/Todo">
-                  <Badge count={todoCount}>
-                    <Avatar shape='square' icon={<UserOutlined />} />
-                  </Badge>
-                </Link>
-              </Menu.Item>
-              <Menu.Item key="/SignIn" hidden={logined}><Link to='/SignIn'><LoginOutlined />Sign In</Link></Menu.Item>
-              <Menu.Item key="/Fixtures.xltm"><a href="/Fixtures.xltm"  target="_blank"><FileSearchOutlined />Query Fixtures</a></Menu.Item>
-              <Menu.Item key="/CheckoutRecord"><Link to='/CheckoutRecord'><SendOutlined />Checkout Apply</Link></Menu.Item>
-              <Menu.Item key="/History"><Link to="/History"><HistoryOutlined />Apply History</Link></Menu.Item>
-              <Menu.Item key="/SignOut" hidden={!logined} onClick={OnSignoutAsync} ><LogoutOutlined />Sign out</Menu.Item>
-            </Menu>):(
-            <Menu theme="dark" mode="horizontal" style={{ fontSize: '18px' }}>
-              <Menu.Item><LoginOutlined />Please Login</Menu.Item>
-            </Menu>)
-        }
+        <Menu theme="dark" mode="horizontal" style={{ fontSize: '16px' }}
+          hidden={!Logined.Current} defaultSelectedKeys={[window.location.pathname]}>
+          <Menu.Item key="/Todo">
+            <Link to="/Todo">
+              <Badge count={todoCount}>
+                <Avatar shape='square' icon={<UserOutlined />} />
+              </Badge>
+            </Link>
+          </Menu.Item>
+          <Menu.Item key="/"><Link to='/'><HomeFilled />Home</Link></Menu.Item>
+          <Menu.Item key="/Fixtures.xltm"><a href="/Fixtures.xltm" target="_blank"><FileSearchOutlined />Query Fixtures</a></Menu.Item>
+          <Menu.Item key="/CheckoutRecord"><Link to='/CheckoutRecord'><SendOutlined />Checkout Apply</Link></Menu.Item>
+          <Menu.Item key="/History"><Link to="/History"><HistoryOutlined />Apply History</Link></Menu.Item>
+          <Menu.Item key="/SignOut" hidden={!Logined.Current} 
+                onClick={async e=>{
+                    await _rolesWebAPI.LogoutAsync()
+                    message.warning("Sign out!")}} >
+          <LogoutOutlined />Sign out</Menu.Item>
+        </Menu>
       </Header>
       <Content>
         <div className="site-layout-content">
@@ -75,40 +67,24 @@ function App(props: any) {
             <Route exact path='/CheckoutRecord'>
               <CheckoutApply />
             </Route>
-            <Route exact path="/CheckoutRecordTodo">
-              <CheckoutTestRoomApproverTodo />
-            </Route>
             <Route exact path="/Todo">
-              <Todo />
+              <TestFieldResponseTodo />
             </Route>
             <Route exact path="/History">
-              <ApplyHistory />
+              <CheckoutApplyHistory />
             </Route>
-            <Route path='/'>
-              <SignIn OnSignIn={OnSignIn} />
+            <Route path="/">
+              <Home />
             </Route>
           </Switch>
         </div>
+        <SignIn />
       </Content>
       <Footer style={{ textAlign: 'center' }}>
         LabCMS.EquipmentDomain ©2021 Created by Raccoon Li
         </Footer>
     </Layout>
   );
-
-  function OnSignIn() {
-    window.alert("Sign in successfully, back to Home page now!");
-    setLogined(true);
-    history.push('/History');
-  }
-
-  async function OnSignoutAsync() {
-    const rolesService = new RolesService();
-    await rolesService.LogoutAsync();
-    setLogined(false);
-    window.alert("Sign out, back to sign in page");
-    history.push('/SignIn');
-  }
-}
+});
 
 export default App; 

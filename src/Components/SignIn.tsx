@@ -1,46 +1,32 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Form, Input, Button, Checkbox, Breadcrumb } from 'antd';
+import { Form, Input, Button, Checkbox, Breadcrumb,Modal,message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import md5 from 'md5';
 import cookie from 'react-cookies'
-import RolesService from '../Services/RolesService';
+import RolesWebAPI from '../WebAPIs/RolesWebAPI';
 import './SignIn.css';
-import RolePayloadCacheService from '../Services/RolePayloadCacheService';
-import { Redirect, useHistory } from 'react-router-dom';
+import LoginedStateCachedService from '../Services/LoginedStateCachedService';
+import Logined from '../States/Logined';
 const layout = {
-    labelCol: { span: 8 },
-    wrapperCol: { span: 8 },
+    labelCol: { span: 6 },
+    wrapperCol: { span: 16 },
 };
 const tailLayout = {
-    wrapperCol: { offset: 8, span: 8 },
+    wrapperCol: { offset: 6, span: 12 },
 };
-const _rolesService = new RolesService();
-const _rolePayloadCacheService = new RolePayloadCacheService();
+const _rolesWebAPI = new RolesWebAPI();
+const _rolePayloadCacheService = new LoginedStateCachedService();
 
 
 
-const SignIn: React.FC<{ OnSignIn?: () => void }> = ({ OnSignIn }) => {
+function SignIn () {
     const [loginButtonLoading, setLoginButtonLoading] = useState<boolean>(false);
-    const history = useHistory();
-    useEffect(()=>{
-        if(_rolePayloadCacheService.Get()){
-            history.push("/History");
-        }
-    },[])
-
-
-    return _rolePayloadCacheService.Get() ? <Redirect to='/' /> : (
-        <Fragment>
-            <div style={{ padding: '0 50px',background:'#eee',minHeight:'1.8rem',lineHeight:'1.8rem'}}>
-                <Breadcrumb>
-                    <Breadcrumb.Item>Website</Breadcrumb.Item>
-                    <Breadcrumb.Item>SignIn</Breadcrumb.Item>
-                </Breadcrumb>
-            </div>
-
+    return (
+        !Logined.Current?
+        <Modal visible={!Logined.Current} title="Log in" closable={false} footer={null}>
             <Form {...layout}
                 size={'large'}
-                style={{ marginTop: '10vh' }}
+                style={{ marginTop: '32px' }}
                 name="SignInForm"
                 initialValues={{ Remember: true }}
                 onFinish={LoginAsync}>
@@ -75,22 +61,24 @@ const SignIn: React.FC<{ OnSignIn?: () => void }> = ({ OnSignIn }) => {
                 Or <a href="/">register now!</a>
                 </Form.Item>
             </Form>
-        </Fragment>
+        </Modal>:<div></div>
     );
 
     async function LoginAsync(values: any) {
         setLoginButtonLoading(true);
         try {
-            await _rolesService.LoginAsync(values.UserId, md5(values.Password));
+            await _rolesWebAPI.LoginAsync(values.UserId, md5(values.Password));
             if (values.Remember) {
                 const rolePayloadCookie = cookie.load("RolePayload");
-                _rolePayloadCacheService.Set(rolePayloadCookie);
+                _rolePayloadCacheService.SetRolePayload(rolePayloadCookie);
             }
             _rolePayloadCacheService.SetUserId(values.UserId)
-            OnSignIn?.();
         } catch (err) {
             window.alert(err);
-        } finally { setLoginButtonLoading(false); }
+        } finally { 
+            message.success("Log in!")
+            setLoginButtonLoading(false); 
+        }
     }
 }
 

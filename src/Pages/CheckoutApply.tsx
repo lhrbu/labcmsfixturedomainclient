@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Form, Input, Button, Select, Breadcrumb, Skeleton } from 'antd';
+import { Form, Input, Button, Select, Breadcrumb, Skeleton,message } from 'antd';
 import './HeaderBar.css';
 import Fixture from '../Models/Fixture';
 import FixturesWebAPI from '../WebAPIs/FixturesWebAPI';
@@ -19,12 +19,14 @@ const tailLayout = {
 };
 
 const _timeStampStringConverter = new TimeStampStringConverter();
+const _fixturesWebAPI =new FixturesWebAPI()
 
 export default function CheckoutApply() {
 
     const [fixturesLoaded, setFixtureLoaded] = useState<boolean>(false);
     const [fixtures, setFixtures] = useState<Fixture[]>([]);
     const [form] = Form.useForm();
+    const [fixtureName,setFixtureName] = useState<string>("");
 
     const [inSubmit,setInSubmit] = useState<boolean>(false);
 
@@ -51,18 +53,24 @@ export default function CheckoutApply() {
                         label="Fixture No"
                         name="FixtureNo"
                         rules={[{
-                            required: true, message: '情输入有效支架编号!',
+                            required: true, message: '请输入有效支架编号!',
                             validator: (_, value: number) => fixtures.some(item => item.No === value) ? Promise.resolve() : Promise.reject("Project name is invalid."),
 
                         }]}>
                         <Select showSearch
-                            onSearch={(value) => form.setFieldsValue({ FixtureNo: value })}>
+                            onChange={(value) => { 
+                                form.setFieldsValue({ FixtureNo: value })
+                                setFixtureName(fixtures.find(item=>item.No===value)!.Description!)
+                                }}>
                             {
                                 fixtures.map(item => (
                                     <Option value={item.No!} key={item.No!}>{item.No}</Option>
                                 ))
                             }
                         </Select>
+                    </Form.Item>
+                    <Form.Item label="Fixture Name">
+                        <Input value={fixtureName} disabled/>
                     </Form.Item>
                     <Form.Item
                         label="Receiver Company"
@@ -98,7 +106,7 @@ export default function CheckoutApply() {
     );
 
     async function FetchFixtures() {
-        const fixtures = await (new FixturesWebAPI().GetAsync());
+        const fixtures = await (_fixturesWebAPI.GetAsync());
         setFixtures([...fixtures]);
         setFixtureLoaded(true);
     }
@@ -111,9 +119,9 @@ export default function CheckoutApply() {
             checkoutRecordPayload.PlanndReturnDate = _timeStampStringConverter.ToUnixTimeSeconds(values.PlanndReturnDateString);
             const _checkoutRecordsWebAPI = new CheckoutRecordsWebAPI();
             await _checkoutRecordsWebAPI.InitAsync(checkoutRecordPayload);
-            window.alert("Submit Successfully!");
+            message.success("Submit Successfully!");
         }catch(error){
-            window.alert(error);
+            message.error(error);
         }finally{
             setInSubmit(false);
         }

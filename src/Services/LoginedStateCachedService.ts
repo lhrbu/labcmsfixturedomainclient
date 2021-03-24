@@ -1,6 +1,6 @@
 import moment from 'moment';
 
-export default class RolePayloadCacheService
+export default class LoginedStateCachedService
 {
     private readonly _expiredSeconds:number;
     
@@ -11,13 +11,13 @@ export default class RolePayloadCacheService
     {
         window.localStorage.setItem("UserId",userId);
     }
-    public Set(rolePayload:string)
+    public SetRolePayload(rolePayload:string)
     {
         window.localStorage.setItem("RolePayload",rolePayload);
         window.localStorage.setItem("RolePayloadExp",(moment().unix()+this._expiredSeconds).toString());
     }
 
-    public Get()
+    public GetRolePayloadAndSetCookie()
     {
         const maxAllowedDateStr = window.localStorage.getItem("RolePayloadExp");
         if(!maxAllowedDateStr){return null;}
@@ -26,7 +26,12 @@ export default class RolePayloadCacheService
         if(maxAllowedUnix>=moment().unix())
         {
             window.localStorage.setItem("RolePayloadExp",(moment().unix()+this._expiredSeconds).toString());
-            return window.localStorage.getItem("RolePayload");
+            const rolePayloadCookie = window.localStorage.getItem("RolePayload");
+            if(rolePayloadCookie){
+                window.document.cookie = rolePayloadCookie
+            }
+            return rolePayloadCookie
+
         }else{return null;}
     }
 

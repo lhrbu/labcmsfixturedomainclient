@@ -9,4 +9,5 @@ export default class Fixture
     public FloorNo:number = 0;
     public AssetNo:string|null=null;
     public Note:string|null=null;
+    public Description:string | null =null;
 }
