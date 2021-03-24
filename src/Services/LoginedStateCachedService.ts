@@ -11,6 +11,11 @@ export default class LoginedStateCachedService
     {
         window.localStorage.setItem("UserId",userId);
     }
+    
+    public GetUserId(){
+        return window.localStorage.getItem("UserId");
+    }
+
     public SetRolePayload(rolePayload:string)
     {
         window.localStorage.setItem("RolePayload",rolePayload);
@@ -35,7 +40,5 @@ export default class LoginedStateCachedService
         }else{return null;}
     }
 
-    public get UserId(){
-        return window.localStorage.getItem("UserId");
-    }
+    
 }
