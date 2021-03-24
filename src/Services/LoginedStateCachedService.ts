@@ -33,7 +33,7 @@ export default class LoginedStateCachedService
             window.localStorage.setItem("RolePayloadExp",(moment().unix()+this._expiredSeconds).toString());
             const rolePayloadCookie = window.localStorage.getItem("RolePayload");
             if(rolePayloadCookie){
-                window.document.cookie = rolePayloadCookie
+                window.document.cookie = `RolePayload=${rolePayloadCookie}`
             }
             return rolePayloadCookie
 
